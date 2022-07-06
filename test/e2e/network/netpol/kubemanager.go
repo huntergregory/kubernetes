@@ -275,12 +275,13 @@ func (k *kubeManager) setNamespaceLabels(ns string, labels map[string]string) er
 
 // deleteNamespaces removes a namespace from kubernetes.
 func (k *kubeManager) deleteNamespaces(namespaces []string) error {
-	for _, ns := range namespaces {
-		err := k.clientSet.CoreV1().Namespaces().Delete(context.TODO(), ns, metav1.DeleteOptions{})
-		if err != nil {
-			return fmt.Errorf("unable to delete namespace %s: %w", ns, err)
-		}
-	}
+	framework.Logf("CUSTOM CHANGES: skipping deletion of namespaces: %+v", namespaces)
+	// for _, ns := range namespaces {
+	// 	err := k.clientSet.CoreV1().Namespaces().Delete(context.TODO(), ns, metav1.DeleteOptions{})
+	// 	if err != nil {
+	// 		return fmt.Errorf("unable to delete namespace %s: %w", ns, err)
+	// 	}
+	// }
 	return nil
 }
 
