@@ -55,8 +55,8 @@ func ProbePodToPodConnectivity(prober Prober, model *Model, testCase *TestCase) 
 	jobs := make(chan *ProbeJob, size)
 	results := make(chan *ProbeJobResults, size)
 
-	framework.Logf("CUSTOM CHANGES: Sleeping 2 minutes before probing pod to pod connectivity...")
-	time.Sleep(120 * time.Second)
+	framework.Logf("CUSTOM CHANGES: Sleeping 90 seconds before probing pod to pod connectivity...")
+	time.Sleep(90 * time.Second)
 	framework.Logf("CUSTOM CHANGES: Finished sleeping. Probing pod to pod connectivity...")
 
 	for i := 0; i < model.GetWorkers(); i++ {
