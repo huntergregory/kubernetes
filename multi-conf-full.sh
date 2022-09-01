@@ -1,7 +1,8 @@
 ################## CONSTANTS ##################
 numClusters=20
 maxFailedClusters=5
-myResourceGroup="hgregory-full-conf-dirty-7-6"
+myResourceGroup="TODO" # FIXME update
+npmYaml="windows-npm.yaml" # FIXME update
 e2eFile="./e2e-no-cleanup-and-sleep-3-min.test"
 
 myLocation="eastus"
@@ -75,7 +76,7 @@ for i in $(seq 1 $numClusters); do
 
     az aks get-credentials -g $myResourceGroup -n $myAKSCluster -f $configFile --overwrite-existing
 
-    kubectl --kubeconfig=$configFile apply -f ~/dev/windows-npm/windows-npm.yaml
+    kubectl --kubeconfig=$configFile apply -f $npmYaml
 
     npmWaitCount=0
     while : ; do
