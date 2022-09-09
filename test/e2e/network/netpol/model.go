@@ -92,7 +92,7 @@ func NewModel(namespaces []string, podNames []string, ports []int32, protocols [
 func (m *Model) GetProbeTimeoutSeconds() int {
 	timeoutSeconds := 1
 	if framework.NodeOSDistroIs("windows") {
-		timeoutSeconds = 3
+		timeoutSeconds = 2
 	}
 	return timeoutSeconds
 }
