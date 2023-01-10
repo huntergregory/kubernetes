@@ -108,7 +108,8 @@ func waitForHTTPServers(k *kubeManager, model *Model) error {
 }
 
 // ValidateOrFail validates connectivity
-func ValidateOrFail(k8s *kubeManager, model *Model, testCase *TestCase) {
+// It modifies failed to true if the test fails
+func ValidateOrFail(k8s *kubeManager, model *Model, testCase *TestCase, failSignal chan<- struct{}, failed *bool) {
 	ginkgo.By("Validating reachability matrix...")
 
 	// 1st try
@@ -122,6 +123,8 @@ func ValidateOrFail(k8s *kubeManager, model *Model, testCase *TestCase) {
 
 	// at this point we know if we passed or failed, print final matrix and pass/fail the test.
 	if _, wrong, _, _ := testCase.Reachability.Summary(ignoreLoopback); wrong != 0 {
+		failSignal <- struct{}{}
+		*failed = true
 		testCase.Reachability.PrintSummary(true, true, true)
 		framework.Failf("Had %d wrong results in reachability matrix", wrong)
 	}
