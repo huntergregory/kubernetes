@@ -50,13 +50,17 @@ type ProbeJobResults struct {
 
 // ProbePodToPodConnectivity runs a series of probes in kube, and records the results in `testCase.Reachability`
 func ProbePodToPodConnectivity(prober Prober, model *Model, testCase *TestCase) {
+	SleepThenProbePodToPodConnectivity(prober, model, testCase, 0)
+}
+
+func SleepThenProbePodToPodConnectivity(prober Prober, model *Model, testCase *TestCase, sleepDuration time.Duration) {
 	allPods := model.AllPods()
 	size := len(allPods) * len(allPods)
 	jobs := make(chan *ProbeJob, size)
 	results := make(chan *ProbeJobResults, size)
 
-	framework.Logf("CUSTOM CHANGES: Sleeping 90 seconds before probing pod to pod connectivity...")
-	time.Sleep(90 * time.Second)
+	framework.Logf("CUSTOM CHANGES: Sleeping %+v before probing pod to pod connectivity...", sleepDuration)
+	time.Sleep(sleepDuration)
 	framework.Logf("CUSTOM CHANGES: Finished sleeping. Probing pod to pod connectivity...")
 
 	for i := 0; i < model.GetWorkers(); i++ {
