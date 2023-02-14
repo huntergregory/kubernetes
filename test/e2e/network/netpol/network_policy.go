@@ -1509,7 +1509,7 @@ var _ = common.SIGDescribe("Netpol [LinuxOnly]", func() {
 			default:
 			}
 
-			if !useFixedNamespaces {
+			if !useFixedNamespaces && !*quitting {
 				k8s := newKubeManager(f)
 				framework.ExpectNoError(k8s.deleteNamespaces(model.NamespaceNames), "unable to clean up UDP netpol namespaces")
 			}
@@ -1623,7 +1623,7 @@ var _ = common.SIGDescribe("Netpol [Feature:SCTPConnectivity][LinuxOnly][Disrupt
 			default:
 			}
 
-			if !useFixedNamespaces {
+			if !useFixedNamespaces && !*quitting {
 				k8s := newKubeManager(f)
 				framework.ExpectNoError(k8s.deleteNamespaces(model.NamespaceNames), "unable to clean up SCTP netpol namespaces")
 			}
