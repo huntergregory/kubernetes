@@ -108,20 +108,25 @@ func waitForHTTPServers(k *kubeManager, model *Model) error {
 }
 
 // ValidateOrFail validates connectivity
-func ValidateOrFail(k8s *kubeManager, model *Model, testCase *TestCase) {
+// It modifies failed to true if the test fails
+func ValidateOrFail(k8s *kubeManager, model *Model, testCase *TestCase, failSignal chan<- struct{}, failed *bool) {
 	ginkgo.By("Validating reachability matrix...")
+
+	sleepDuration := 90 * time.Second
 
 	// 1st try
 	ginkgo.By("Validating reachability matrix... (FIRST TRY)")
-	ProbePodToPodConnectivity(k8s, model, testCase)
+	SleepThenProbePodToPodConnectivity(k8s, model, testCase, sleepDuration)
 	// 2nd try, in case first one failed
 	if _, wrong, _, _ := testCase.Reachability.Summary(ignoreLoopback); wrong != 0 {
 		framework.Logf("failed first probe %d wrong results ... retrying (SECOND TRY)", wrong)
-		ProbePodToPodConnectivity(k8s, model, testCase)
+		SleepThenProbePodToPodConnectivity(k8s, model, testCase, sleepDuration)
 	}
 
 	// at this point we know if we passed or failed, print final matrix and pass/fail the test.
 	if _, wrong, _, _ := testCase.Reachability.Summary(ignoreLoopback); wrong != 0 {
+		failSignal <- struct{}{}
+		*failed = true
 		testCase.Reachability.PrintSummary(true, true, true)
 		framework.Failf("Had %d wrong results in reachability matrix", wrong)
 	}
