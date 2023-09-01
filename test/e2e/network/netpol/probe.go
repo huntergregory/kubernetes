@@ -18,7 +18,6 @@ package netpol
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/onsi/ginkgo"
 	v1 "k8s.io/api/core/v1"
@@ -54,11 +53,6 @@ func ProbePodToPodConnectivity(prober Prober, model *Model, testCase *TestCase) 
 	size := len(allPods) * len(allPods)
 	jobs := make(chan *ProbeJob, size)
 	results := make(chan *ProbeJobResults, size)
-
-	framework.Logf("CUSTOM CHANGES: Sleeping 1 second before probing pod to pod connectivity...")
-	time.Sleep(1 * time.Second)
-	framework.Logf("CUSTOM CHANGES: Finished sleeping. Probing pod to pod connectivity...")
-
 	for i := 0; i < model.GetWorkers(); i++ {
 		go probeWorker(prober, jobs, results, model.GetProbeTimeoutSeconds())
 	}
